@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TeleDrive</string>
+    <string name="notification_channel_transfers">File Transfers</string>
+    <string name="notification_channel_transfers_desc">Upload and download progress notifications</string>
+</resources>

@@ -1,0 +1,8 @@
+{
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "changelog": "• Initial public release of TeleDrive for Android!\n• Unlimited Telegram Cloud storage with Google Photos UI\n• 120Hz smooth scrolling & zero-flicker cached media\n• Offline ML Face Clustering & people separation\n• Built-in Over-The-Air (OTA) update system",
+  "downloadUrl": "https://github.com/Deep007h/TeleDrive/releases/download/v1.0.0/TeleDrive.apk",
+  "fileSize": 45000000,
+  "forceUpdate": false
+}
