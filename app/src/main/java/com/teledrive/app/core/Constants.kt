@@ -12,9 +12,11 @@ object Constants {
     const val PREFS_KEY_THEME_MODE = "theme_mode"
     const val PREFS_KEY_VIEW_MODE = "view_mode"
     
-    // Official Telegram Android MTProto API Credentials
+    // Default Telegram MTProto API Credentials (public demo keys - users should provide their own from my.telegram.org)
     const val API_ID = 6
     const val API_HASH = "eb06d4abfb49dc3eeb1aeb98ae0f581e"
+    const val DEFAULT_API_ID = API_ID
+    const val DEFAULT_API_HASH = API_HASH
     
     const val CHAT_HISTORY_LIMIT = 100
     const val SYNC_INTERVAL_MS = 5 * 60 * 1000L

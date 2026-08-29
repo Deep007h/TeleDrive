@@ -46,8 +46,8 @@ class TdLibManager {
 
     private var client: Client? = null
     private var appContext: Context? = null
-    private var activeApiId: Int = Constants.API_ID
-    private var activeApiHash: String = Constants.API_HASH
+    private var activeApiId: Int = Constants.DEFAULT_API_ID
+    private var activeApiHash: String = Constants.DEFAULT_API_HASH
 
     private inner class UpdateHandler : Client.ResultHandler {
         override fun onResult(obj: TdApi.Object?) {

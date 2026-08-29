@@ -45,7 +45,7 @@ fun EmptyState(onUploadClick: (() -> Unit)? = null) {
             Spacer(modifier = Modifier.height(24.dp))
             ExtendedFloatingActionButton(
                 onClick = uploadAction,
-                icon = { Icon(Icons.Filled.CloudUpload, contentDescription = null, size = 24.dp) },
+                icon = { Icon(Icons.Filled.CloudUpload, contentDescription = null, modifier = Modifier.size(24.dp)) },
                 text = { Text("Upload Files", fontSize = 16.sp) }
             )
         }

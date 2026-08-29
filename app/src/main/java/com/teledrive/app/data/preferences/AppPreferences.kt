@@ -90,7 +90,12 @@ class AppPreferences(private val context: Context) {
     }
 
     val otaUpdateUrl: Flow<String> = context.dataStore.data.map { prefs ->
-        prefs[OTA_UPDATE_URL] ?: Constants.DEFAULT_OTA_UPDATE_URL
+        val saved = prefs[OTA_UPDATE_URL]
+        if (saved.isNullOrBlank() || saved.contains("teledrive-org")) {
+            Constants.DEFAULT_OTA_UPDATE_URL
+        } else {
+            saved
+        }
     }
 
     suspend fun setOtaUpdateUrl(url: String) {

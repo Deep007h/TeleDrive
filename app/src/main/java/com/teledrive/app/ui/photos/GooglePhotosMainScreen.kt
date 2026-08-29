@@ -28,7 +28,6 @@ import com.teledrive.app.ui.components.GooglePhotosTab
 import com.teledrive.app.ui.components.GooglePhotosTopBar
 import com.teledrive.app.ui.explorer.ExplorerViewModel
 import com.teledrive.app.ui.files.FilesScreen
-import com.teledrive.app.ui.memories.MemorySlideshowScreen
 import com.teledrive.app.ui.navigation.Screen
 import com.teledrive.app.ui.people.PeopleScreen
 import com.teledrive.app.ui.people.PersonDetailScreen
@@ -55,7 +54,6 @@ fun GooglePhotosMainScreen(
     var selectedTab by remember { mutableStateOf(GooglePhotosTab.PHOTOS) }
     var activeUnifiedItem by remember { mutableStateOf<UnifiedMediaItem?>(null) }
     var activeViewerItem by remember { mutableStateOf<FileEntity?>(null) }
-    var activeStory by remember { mutableStateOf<MemoryStory?>(null) }
     var selectedCategoryName by remember { mutableStateOf<String?>(null) }
     var activePersonDetail by remember { mutableStateOf<PersonCluster?>(null) }
     var selectedDeviceAlbum by remember { mutableStateOf<DeviceAlbum?>(null) }
@@ -206,13 +204,11 @@ fun GooglePhotosMainScreen(
                   showProfileSheet ||
                   activeViewerItem != null ||
                   activeUnifiedItem != null ||
-                  activeStory != null ||
                   selectedTab != GooglePhotosTab.PHOTOS
     ) {
         when {
             activeUnifiedItem != null -> activeUnifiedItem = null
             activeViewerItem != null -> activeViewerItem = null
-            activeStory != null -> activeStory = null
             selectedDeviceAlbum != null -> selectedDeviceAlbum = null
             showDeviceAlbumsGrid -> showDeviceAlbumsGrid = false
             selectedCategoryName != null -> selectedCategoryName = null
@@ -321,8 +317,7 @@ fun GooglePhotosMainScreen(
                     // Show Category Grid for Documents, Places, Stickers, Favorites
                     GooglePhotosMainGrid(
                         items = categoryFilteredUnifiedMedia,
-                        onItemClick = { activeUnifiedItem = it },
-                        onStoryClick = { }
+                        onItemClick = { activeUnifiedItem = it }
                     )
                 }
             }
@@ -351,8 +346,7 @@ fun GooglePhotosMainScreen(
                                 GooglePhotosTab.PHOTOS -> {
                                     GooglePhotosMainGrid(
                                         items = uiState.unifiedMedia,
-                                        onItemClick = { item -> activeUnifiedItem = item },
-                                        onStoryClick = { story -> activeUnifiedItem = story.item }
+                                        onItemClick = { item -> activeUnifiedItem = item }
                                     )
                                 }
                                 GooglePhotosTab.COLLECTIONS -> {

@@ -9,6 +9,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.teledrive.app.core.AppLogger
+import com.teledrive.app.core.Constants
 import com.teledrive.app.data.preferences.AppPreferences
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,16 +94,36 @@ class OtaUpdateManager(
             AppLogger.i(TAG, "Checking for updates (current: v$currentVersionName, code: $currentVersionCode)...")
 
             try {
-                val targetUrl = overrideUrl ?: preferences.otaUpdateUrl.first()
-                val request = Request.Builder()
+                var targetUrl = overrideUrl ?: preferences.otaUpdateUrl.first()
+                var request = Request.Builder()
                     .url(targetUrl)
                     .header("User-Agent", "TeleDrive-Android/$currentVersionName")
                     .header("Accept", "application/vnd.github.v3+json, application/json, */*")
                     .build()
 
-                val response = httpClient.newCall(request).execute()
+                var response = httpClient.newCall(request).execute()
                 if (!response.isSuccessful) {
-                    throw Exception("HTTP ${response.code}: ${response.message}")
+                    if (response.code == 404 && targetUrl != Constants.DEFAULT_OTA_UPDATE_URL) {
+                        // Fallback to default repo release URL
+                        targetUrl = Constants.DEFAULT_OTA_UPDATE_URL
+                        preferences.setOtaUpdateUrl(targetUrl)
+                        request = Request.Builder()
+                            .url(targetUrl)
+                            .header("User-Agent", "TeleDrive-Android/$currentVersionName")
+                            .header("Accept", "application/vnd.github.v3+json, application/json, */*")
+                            .build()
+                        response = httpClient.newCall(request).execute()
+                    }
+                }
+
+                if (!response.isSuccessful) {
+                    if (response.code == 404) {
+                        // 404 on release endpoint means no new release or draft - treat as up-to-date
+                        AppLogger.i(TAG, "No release found at endpoint (404), app is up to date.")
+                        _updateState.value = if (force) OtaUpdateState.UpToDate() else OtaUpdateState.Idle
+                        return@launch
+                    }
+                    throw Exception("Server returned code ${response.code}")
                 }
 
                 val bodyStr = response.body?.string() ?: throw Exception("Empty response from update server")
@@ -115,11 +136,18 @@ class OtaUpdateManager(
                     _updateState.value = OtaUpdateState.UpdateAvailable(updateInfo)
                 } else {
                     AppLogger.i(TAG, "App is up to date.")
-                    _updateState.value = OtaUpdateState.UpToDate()
+                    _updateState.value = if (force) OtaUpdateState.UpToDate() else OtaUpdateState.Idle
                 }
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Update check failed: ${e.message}", e)
-                _updateState.value = OtaUpdateState.Error(e.message ?: "Failed to check for updates")
+                if (force) {
+                    _updateState.value = OtaUpdateState.Error(
+                        if (e.message?.contains("404") == true) "No updates available at this time."
+                        else e.message ?: "Failed to check for updates"
+                    )
+                } else {
+                    _updateState.value = OtaUpdateState.Idle
+                }
             }
         }
     }

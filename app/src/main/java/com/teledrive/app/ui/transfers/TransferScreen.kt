@@ -23,10 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PullRefresh
-import androidx.compose.material3.PullRefreshIndicator
-import androidx.compose.material3.PullRefreshState
-import androidx.compose.material3.rememberPullRefreshState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,7 +52,6 @@ fun TransferScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val pullRefreshState = rememberPullRefreshState(refreshing = false)
 
     Scaffold(
         topBar = {
@@ -69,37 +65,25 @@ fun TransferScreen(
             )
         }
     ) { padding ->
-        PullRefresh(
-            state = pullRefreshState,
-            refreshing = false,
-            onRefresh = { viewModel.uiState.value.activeTransfers.isNotEmpty() }.also { 
-                // We can't easily trigger a refresh since TransferManager doesn't have a refresh method
-                // The list updates automatically via StateFlow
-            },
-            contentPadding = PaddingValues(top = 0.dp),
-            indicator = { state, _, _ ->
-                PullRefreshIndicator(state = state, refreshingColor = MaterialTheme.colorScheme.primary)
+        if (uiState.activeTransfers.isEmpty() && uiState.completedTransfers.isEmpty() && uiState.failedTransfers.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No transfers yet",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
-        ) {
-            if (uiState.activeTransfers.isEmpty() && uiState.completedTransfers.isEmpty() && uiState.failedTransfers.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No transfers yet",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                ) {
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
                     if (uiState.activeTransfers.isNotEmpty()) {
                         item { SectionHeader("Active Transfers") }
                         items(uiState.activeTransfers, key = { "active_${it.transferId}" }) { transfer ->
@@ -165,7 +149,6 @@ fun TransferScreen(
             }
         }
     }
-}
 }
 
 @Composable

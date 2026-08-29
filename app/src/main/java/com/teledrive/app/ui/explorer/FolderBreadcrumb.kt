@@ -3,16 +3,17 @@ package com.teledrive.app.ui.explorer
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -59,11 +60,11 @@ fun FolderBreadcrumb(
                     onClick = { onSegmentClick(segment) },
                     modifier = Modifier.padding(horizontal = 4.dp),
                     colors = if (isLast) {
-                        TextButtonDefaults.textButtonColors(
+                        ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.primary
                         )
                     } else {
-                        TextButtonDefaults.textButtonColors(
+                        ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -84,8 +85,9 @@ fun FolderBreadcrumb(
                     imageVector = Icons.Default.ChevronRight,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.padding(horizontal = 2.dp),
-                    size = 18.dp
+                    modifier = Modifier
+                        .padding(horizontal = 2.dp)
+                        .size(18.dp)
                 )
             }
         }

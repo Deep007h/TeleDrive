@@ -1,57 +1,36 @@
 package com.teledrive.app.ui.components
 
-import androidx.compose.animation.core.InfiniteRepeatableSpec
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.TweenSpec
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoadingIndicator(isGrid: Boolean) {
-    val shimmerAlpha by remember {
-        mutableStateOf(0.2f)
-    }
-    // Animate shimmer effect
-    androidx.compose.animation.animateFloatAsState(
-        targetValue = 1f,
+    val transition = rememberInfiniteTransition(label = "shimmer")
+    val translateAnim by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1000f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1500, delayMillis = 0, easing = androidx.compose.animation.core.LinearEasing),
-            repeatMode = RepeatMode.Reverse
+            animation = tween(durationMillis = 1200, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
         ),
-        label = "shimmer"
-    ).also { shimmerAlpha = it.value }
+        label = "shimmerTranslate"
+    )
 
     val shimmerBrush = Brush.linearGradient(
         colors = listOf(
@@ -59,35 +38,34 @@ fun LoadingIndicator(isGrid: Boolean) {
             Color.LightGray.copy(alpha = 0.6f),
             Color.LightGray.copy(alpha = 0.3f)
         ),
-        start = androidx.compose.ui.geometry.Offset(0f, 0f),
-        end = androidx.compose.ui.geometry.Offset(200f, 0f)
+        start = Offset(translateAnim - 200f, translateAnim - 200f),
+        end = Offset(translateAnim, translateAnim)
     )
 
     if (isGrid) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(160.dp),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
+            contentPadding = PaddingValues(16.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(6) { _ ->
+            items(6) {
                 SkeletonGridItem(shimmerBrush = shimmerBrush)
             }
         }
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 8.dp)
+            contentPadding = PaddingValues(vertical = 8.dp)
         ) {
-            items(8) { _ ->
+            items(8) {
                 SkeletonListItem(shimmerBrush = shimmerBrush)
             }
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SkeletonGridItem(shimmerBrush: Brush) {
     Card(
@@ -108,8 +86,7 @@ private fun SkeletonGridItem(shimmerBrush: Brush) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(shimmerBrush),
-                contentAlignment = Alignment.Center
+                    .background(shimmerBrush)
             )
             Spacer(modifier = Modifier.height(4.dp))
             Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
