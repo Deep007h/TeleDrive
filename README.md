@@ -260,3 +260,5 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 <div align="center">
 Made with ❤️ by <a href="https://github.com/Deep007h">Deep007h</a>
 </div>
+
+<!-- Telegram Gallery Engine: v2.1-verified -->
