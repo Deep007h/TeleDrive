@@ -1,8 +1,8 @@
-# 📁 TeleDrive
+# 🖼️ Telegram Gallery
 
 <div align="center">
 
-<img src="docs/assets/logo.png" width="128" alt="TeleDrive Logo" />
+<img src="docs/assets/logo.png" width="128" alt="Telegram Gallery Logo" />
 
 <br/>
 <br/>
@@ -14,9 +14,9 @@
 ![Architecture](https://img.shields.io/badge/Architecture-MVI%20%2F%20Clean-FF6F00)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-**Unlimited Telegram Cloud Storage Client for Android, wrapped in an ultra-smooth Google Photos experience.**
+**Unlimited Telegram Cloud Storage & Media Gallery for Android, wrapped in an ultra-smooth Google Photos experience.**
 
-[Download Latest APK](https://github.com/Deep007h/TeleDrive/releases/latest) • [Key Features](#-key-features) • [Architecture](#-architecture) • [Building](#%EF%B8%8F-building-from-source)
+[Download Latest APK](https://github.com/Deep007h/telegram-gallery/releases/latest) • [Key Features](#-key-features) • [Architecture](#-architecture) • [Building](#%EF%B8%8F-building-from-source)
 
 </div>
 
@@ -24,7 +24,7 @@
 
 ## 🌟 Highlights
 
-TeleDrive turns your Telegram account into an **unlimited, secure, and private personal cloud drive** with the exact fluidity, design language, and intelligent organization of Google Photos.
+**Telegram Gallery** turns your Telegram account into an **unlimited, secure, and private personal cloud gallery and drive** with the exact fluidity, design language, and intelligent organization of Google Photos.
 
 - ☁️ **Unlimited Free Storage**: Backed by Telegram MTProto Cloud (`Saved Messages` or private storage channels).
 - 📸 **Unified Photos Feed**: Seamlessly integrates local on-device media with Telegram Cloud files in a chronological timeline.
@@ -81,7 +81,7 @@ TeleDrive turns your Telegram account into an **unlimited, secure, and private p
 - **Zero-Flicker Hardware Accelerated Thumbnails**: Immediate Frame-0 bitmap drawing for cached files with smooth crossfades for remote items.
 
 ### 5. Native Over-The-Air (OTA) Updates
-- Directly queries GitHub Releases (`/repos/Deep007h/TeleDrive/releases/latest`) or custom JSON endpoints.
+- Directly queries GitHub Releases (`/repos/Deep007h/telegram-gallery/releases/latest`) or custom JSON endpoints.
 - Streaming downloads with real-time download speed (`MB/s`) and progress bar.
 - Automatic APK integrity verification (`PK\x03\x04` magic bytes) and `FileProvider` package installer invocation.
 - Customizable update URL directly within in-app Settings.
@@ -90,7 +90,7 @@ TeleDrive turns your Telegram account into an **unlimited, secure, and private p
 
 ## 🏗️ Architecture
 
-TeleDrive follows modern Android Clean Architecture and MVI principles built around Jetpack Compose.
+Telegram Gallery follows modern Android Clean Architecture and MVI principles built around Jetpack Compose.
 
 ```mermaid
 graph TD
@@ -167,13 +167,13 @@ flowchart LR
 sequenceDiagram
     autonumber
     actor User as User
-    participant App as TeleDrive App
+    participant App as Telegram Gallery App
     participant Ota as OtaUpdateManager
     participant GitHub as GitHub Releases API
     participant Installer as Android PackageInstaller
 
     App->>Ota: checkForUpdates()
-    Ota->>GitHub: GET /repos/Deep007h/TeleDrive/releases/latest
+    Ota->>GitHub: GET /repos/Deep007h/telegram-gallery/releases/latest
     GitHub-->>Ota: 200 OK (Release JSON + APK Asset)
     Ota->>Ota: Compare Remote Version vs Local Version
     alt Update Available
@@ -217,14 +217,14 @@ sequenceDiagram
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Deep007h/TeleDrive.git
-cd TeleDrive
+git clone https://github.com/Deep007h/telegram-gallery.git
+cd telegram-gallery
 ```
 
 ### 2. Configure Telegram API Credentials
 Telegram requires an `API_ID` and `API_HASH` to connect via MTProto.
 1. Obtain credentials at [my.telegram.org](https://my.telegram.org).
-2. Check or customize them in [`Constants.kt`](app/src/main/java/com/teledrive/app/core/Constants.kt):
+2. Check or customize them in `Constants.kt`:
 ```kotlin
 const val API_ID = YOUR_API_ID
 const val API_HASH = "YOUR_API_HASH"
@@ -245,7 +245,7 @@ The output APK will be located in:
 
 ## 📦 Releases & Installation
 
-You can download the pre-compiled, ready-to-install APK directly from the [Releases](https://github.com/Deep007h/TeleDrive/releases) tab.
+You can download the pre-compiled, ready-to-install APK directly from the [Releases](https://github.com/Deep007h/telegram-gallery/releases) tab.
 
 Once installed, future updates will be delivered seamlessly inside the app through the built-in Over-The-Air updater.
 
